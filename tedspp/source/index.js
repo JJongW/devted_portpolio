@@ -1,16 +1,12 @@
-import './style.css'
+import "./style.css";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import javascriptLogo from './javascript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.js'
 
 const renderer = new THREE.WebGLRenderer({
-    antialias: true,
+  antialias: true,
 });
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
 
 const app = document.querySelector("#app");
 app.appendChild(renderer.domElement);
@@ -24,18 +20,30 @@ const camera = new THREE.PerspectiveCamera(
   1000
 );
 camera.position.z = 5;
-camera.position.y = 0;
-camera.position.x = -1;
+camera.position.y = 2;
 scene.add(camera);
 
-const geometry = new THREE.BoxGeometry(1, 1, 1);
+const orbitControls = new OrbitControls(camera, renderer.domElement);
+orbitControls.enableDamping = true;
+orbitControls.dampingFactor = 0.05;
 
-//const material = new THREE.MeshBasicMaterial({color: 'white'});
-const material = new THREE.MeshStandardMaterial({color: 'red'});
-const mesh = new THREE.Mesh(geometry, material);
-mesh.castShadow = true;
-mesh.receiveShadow = true;
-scene.add(mesh);
+// 매쉬 01
+const geometry01 = new THREE.BoxGeometry(1, 1, 1);
+const material01 = new THREE.MeshStandardMaterial({ color: "green" });
+const mesh01 = new THREE.Mesh(geometry01, material01);
+mesh01.position.x = -3;
+mesh01.castShadow = true;
+mesh01.receiveShadow = true;
+scene.add(mesh01);
+
+// 매쉬 02
+const geometry02 = new THREE.ConeGeometry(1, 1, 6.6);
+const material02 = new THREE.MeshStandardMaterial({ color: "red" });
+const mesh02 = new THREE.Mesh(geometry02, material02);
+mesh02.position.x = 0;
+mesh02.castShadow = true;
+mesh02.receiveShadow = true;
+scene.add(mesh02);
 
 // const ambientLight = new THREE.AmbientLight();
 // ambientLight.intensity = 0.4;
@@ -52,10 +60,6 @@ directionalLight.shadow.camera.near = 1;
 directionalLight.shadow.camera.far = 60;
 scene.add(directionalLight);
 
-const orbitControls = new OrbitControls(camera, renderer.domElement);
-orbitControls.enableDamping = true;
-orbitControls.dampingFactor = 0.05;
-
 // mesh가 놓여있을 평면 mesh를 생성하고 추가하였다.
 const planeGeometry = new THREE.PlaneGeometry(100, 100);
 const planeMaterial = new THREE.MeshStandardMaterial();
@@ -66,13 +70,15 @@ plane.position.y -= 0.5;
 plane.receiveShadow = true;
 scene.add(plane);
 
-const handleRender = () => {
+const handleRender = (time) => {
+    time *= 0.0005;
   orbitControls.update();
   renderer.render(scene, camera);
   renderer.setAnimationLoop(handleRender);
-
-  //mesh.position.y += 0.001;
-  //mesh.rotation.y += 0.01;
+  mesh01.rotation.x = time;
+  mesh01.rotation.y = time;
+  mesh02.rotation.x = time;
+  mesh02.rotation.y = time;
 };
 
 const handleResize = () => {
