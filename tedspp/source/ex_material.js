@@ -2,8 +2,11 @@ import "./style.css";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x000000);
+
 const renderer = new THREE.WebGLRenderer({
-    alpha: 1,
+    alpha: true,
     antialias: true,
 });
 //renderer.shadowMap.enabled = true;
@@ -13,13 +16,10 @@ const app = document.querySelector("#app");
 app.appendChild(renderer.domElement);
 renderer.setSize(window.innerWidth, window.innerHeight);
 
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xFFFFFF);
-
 const camera = new THREE.PerspectiveCamera(
   75,
   window.innerWidth / window.innerHeight,
-  0.001,
+  0.1,
   1000
 );
 camera.position.z = 3;
@@ -29,9 +29,18 @@ const orbitControls = new OrbitControls(camera, renderer.domElement);
 orbitControls.enableDamping = true;
 orbitControls.dampingFactor = 0.05;
 
-const pointLight = new THREE.PointLight(0xFFFFFF, 10);
-pointLight.position.set(0, 2, 0);
-scene.add(pointLight);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+scene.add(ambientLight);
+
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+directionalLight.position.set(-1.5, 2, 1);
+const dlHelper = new THREE.DirectionalLightHelper(directionalLight, 0.2, 0x0000ff);
+scene.add(dlHelper);
+scene.add(directionalLight);
+directionalLight.castShadow = true;
+directionalLight.shadow.mapSize.width = 2048;
+directionalLight.shadow.mapSize.height = 2048;
+directionalLight.shadow.radius = 8;
 
 const geometry = new THREE.TorusGeometry(0.3, 0.15, 16, 40);
 // 매쉬 01

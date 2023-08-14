@@ -3,7 +3,7 @@ const path = require('path');
 
 module.exports = {
   mode: 'development',
-  entry: "./source/ex_material.js",
+  entry: "./source/ex_3d1.js",
   output:{
     path:path.resolve(__dirname, "public"),
     filename: "index_bundle.js"
